@@ -1,3 +1,5 @@
 #pragma once
+#include <iostream>
+#include <string>
 
-void parseStr(string text, string stop_words[], int ngram_min_length, int ngram_max_length);
+std::string parseStr(std::string text, std::string stop_words[], int ngram_min_length, int ngram_max_length);

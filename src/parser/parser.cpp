@@ -1,5 +1,4 @@
-#include <iostream>
-#include <string>
+#include <parser/parser.hpp>
 #include <vector>
 #include <cctype> 
 
@@ -51,20 +50,23 @@ static vector<string> deleteStopWords(string stop_words[], vector<string> vector
 	return vector;
 }
 
-static void generateNgrams(vector<string> vector, int min_ngram_length, int max_ngram_length) {
+static string generateNgrams(vector<string> vector, int min_ngram_length, int max_ngram_length) {
+    string result;
 	for (int i = 0; i < (int)vector.size(); ++i) {
 		for (int j = min_ngram_length; j <= max_ngram_length && j <= (int)vector[i].size(); ++j) {
-			cout << vector[i].substr(0, j) << " " << i << " ";
+            result += vector[i].substr(0, j) + " " + to_string(i) + " ";
 		}
 	}
-	cout << "\b" << endl;
+	result.erase(result.size() - 1);
+    return result;
 }
 
-void parseStr(string text, string stop_words[], int ngram_min_length, int ngram_max_length) {
-	text = deletPunct(text);
+string parseStr(string text, string stop_words[], int ngram_min_length, int ngram_max_length) {
+	text = deletePunct(text);
 	text = stringToLower(text);
 	vector<string> words;
 	words = splitWords(text, words);
 	words = deleteStopWords(stop_words, words);
-	generateNgrams(words, ngram_min_length, ngram_max_length);
+	string result = generateNgrams(words, ngram_min_length, ngram_max_length);
+    return result;
 }
