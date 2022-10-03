@@ -11,3 +11,10 @@ string deletePunct(string text) {
 	}
 	return text;
 }
+
+string stringToLower(string text) {
+	for (int i = 0; i < (int)text.size() - 1; ++i) {
+		text[i] = (char)tolower(text[i]);
+	}
+	return text;
+}
