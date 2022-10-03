@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 #include <vector>
 #include <cctype> 
@@ -48,4 +49,13 @@ vector<string> deleteStopWords(string stop_words[], vector<string> vector) {
 		}
 	}
 	return vector;
+}
+
+void generateNgrams(vector<string> vector, int min_ngram_length, int max_ngram_length) {
+	for (int i = 0; i < (int)vector.size(); ++i) {
+		for (int j = min_ngram_length; j <= max_ngram_length && j <= (int)vector[i].size(); ++j) {
+			cout << vector[i].substr(0, j) << " " << i << " ";
+		}
+	}
+	cout << "\b" << endl;
 }
