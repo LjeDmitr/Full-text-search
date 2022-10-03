@@ -1,8 +1,13 @@
-#include <fts/fts.hpp>
-
+#include <parser/parser.hpp>
+#include <string>
 #include <gtest/gtest.h>
 
-TEST(ftp, floatingPointNumbers)
+using namespace std;
+
+TEST(parser, parsingString)
 {
-	ASSERT_EQ(42, add_floating_point_numbers(40, 2));
+	string stop_words[] = {"and", "dr", "mr"};
+	string result = parseStr("Dr. Jekyll and Mr. Hyde", stop_words, 3, 6);
+	string expect = "jek 0 jeky 0 jekyl 0 jekyll 0 hyd 1 hyde 1";
+	ASSERT_EQ(expect, result);
 }
