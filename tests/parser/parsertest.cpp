@@ -4,7 +4,7 @@
 
 using namespace std;
 
-TEST(parser, parsingString)
+TEST(parser, normalParsingString)
 {
 	string stop_words[] = {"and", "dr", "mr"};
 	string result = parseStr("Dr. Jekyll and Mr. Hyde", stop_words, 3, 6);
