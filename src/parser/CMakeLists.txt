@@ -1,8 +1,8 @@
-set(target_name fts)
-set(HEADER_LIST "${CMAKE_SOURCE_DIR}/include/fts/fts.hpp")
+set(target_name parser)
+set(HEADER_LIST "${CMAKE_SOURCE_DIR}/include/parser/parser.hpp")
 
 add_library(${target_name} STATIC
-  fts.cpp
+  parser.cpp
   ${HEADER_LIST})
 
 include(CompileOptions)

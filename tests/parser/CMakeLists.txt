@@ -1,6 +1,6 @@
-set(target_name ftstest)
+set(target_name parsertest)
 
-add_executable(${target_name} ftstest.cpp)
+add_executable(${target_name} parsertest.cpp)
 
 include(GoogleTest)
 include(CompileOptions)
@@ -9,13 +9,13 @@ set_compile_options(${target_name})
 target_sources(
   ${target_name}
   PRIVATE
-    ftstest.cpp
+    parsertest.cpp
 )
 
 target_link_libraries(
   ${target_name}
   PRIVATE
-    fts
+    parser
     gtest_main
     gtest
 )
