@@ -37,3 +37,15 @@ vector<string> splitWords(string text, vector<string> vector) {
 	}
 	return vector;
 }
+
+vector<string> deleteStopWords(string stop_words[], vector<string> vector) {
+	auto iter = vector.cbegin();
+	for (int i = 0; i < (int)vector.size(); ++i) {
+		for (int j = 0; j < (int)stop_words->size(); ++j) {
+			if (vector[i] == stop_words[j]) {
+				vector.erase(iter + i);
+			}
+		}
+	}
+	return vector;
+}
