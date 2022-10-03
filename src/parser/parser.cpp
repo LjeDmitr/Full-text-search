@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 #include <cctype> 
 
 using namespace std;
@@ -17,4 +18,22 @@ string stringToLower(string text) {
 		text[i] = (char)tolower(text[i]);
 	}
 	return text;
+}
+
+vector<string> splitWords(string text, vector<string> vector) {
+	int pos = 0;
+	for (int i = 0; i < (int)text.size() - 1; ++i) {
+		if (isspace(text[i])) {
+			if (i == pos) {
+				pos++;
+				break;
+			}
+			vector.push_back(text.substr(pos, i - pos));
+			pos = i + 1;
+		}
+	}
+	if (isspace(text[pos]) == 0) {
+		vector.push_back(text.substr(pos));
+	}
+	return vector;
 }
