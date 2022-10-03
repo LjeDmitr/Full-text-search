@@ -5,7 +5,7 @@
 
 using namespace std;
 
-string deletePunct(string text) {
+static string deletePunct(string text) {
 	for (int i = 0; i < (int)text.size() - 1; ++i) {
 		if (ispunct(text[i])) {
 			text.erase(i, 1);
@@ -14,14 +14,14 @@ string deletePunct(string text) {
 	return text;
 }
 
-string stringToLower(string text) {
+static string stringToLower(string text) {
 	for (int i = 0; i < (int)text.size() - 1; ++i) {
 		text[i] = (char)tolower(text[i]);
 	}
 	return text;
 }
 
-vector<string> splitWords(string text, vector<string> vector) {
+static vector<string> splitWords(string text, vector<string> vector) {
 	int pos = 0;
 	for (int i = 0; i < (int)text.size() - 1; ++i) {
 		if (isspace(text[i])) {
@@ -39,7 +39,7 @@ vector<string> splitWords(string text, vector<string> vector) {
 	return vector;
 }
 
-vector<string> deleteStopWords(string stop_words[], vector<string> vector) {
+static vector<string> deleteStopWords(string stop_words[], vector<string> vector) {
 	auto iter = vector.cbegin();
 	for (int i = 0; i < (int)vector.size(); ++i) {
 		for (int j = 0; j < (int)stop_words->size(); ++j) {
@@ -51,11 +51,20 @@ vector<string> deleteStopWords(string stop_words[], vector<string> vector) {
 	return vector;
 }
 
-void generateNgrams(vector<string> vector, int min_ngram_length, int max_ngram_length) {
+static void generateNgrams(vector<string> vector, int min_ngram_length, int max_ngram_length) {
 	for (int i = 0; i < (int)vector.size(); ++i) {
 		for (int j = min_ngram_length; j <= max_ngram_length && j <= (int)vector[i].size(); ++j) {
 			cout << vector[i].substr(0, j) << " " << i << " ";
 		}
 	}
 	cout << "\b" << endl;
+}
+
+void parseStr(string text, string stop_words[], int ngram_min_length, int ngram_max_length) {
+	text = deletPunct(text);
+	text = stringToLower(text);
+	vector<string> words;
+	words = splitWords(text, words);
+	words = deleteStopWords(stop_words, words);
+	generateNgrams(words, ngram_min_length, ngram_max_length);
 }
