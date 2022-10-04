@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <vector>
 
 std::string parseStr(std::string text, std::string stop_words[], int ngram_min_length, int ngram_max_length);
 std::string deletePunct(std::string text);
