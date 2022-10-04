@@ -25,10 +25,10 @@ vector<string> splitWords(string text, vector<string> vector) {
 		if (isspace(text[i])) {
 			if (i == pos) {
 				pos++;
-				break;
+			} else {
+				vector.push_back(text.substr(pos, i - pos));
+				pos = i + 1;
 			}
-			vector.push_back(text.substr(pos, i - pos));
-			pos = i + 1;
 		}
 	}
 	if (isspace(text[pos]) == 0) {
