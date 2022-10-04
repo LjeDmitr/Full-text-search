@@ -56,7 +56,9 @@ string generateNgrams(vector<string> vector, int min_ngram_length, int max_ngram
             result += vector[i].substr(0, j) + " " + to_string(i) + " ";
 		}
 	}
-	result.erase(result.size() - 1);
+	if (!result.empty()) {
+		result.erase(result.size() - 1);
+	}
     return result;
 }
 
