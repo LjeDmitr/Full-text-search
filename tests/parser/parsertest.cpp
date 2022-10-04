@@ -143,3 +143,31 @@ TEST(delete_stop_words, onlyStopWords)
 	vector<string> expect;
 	ASSERT_EQ(expect, words);
 }
+
+TEST(generate_ngramm, correctData)
+{
+	vector<string> words;
+	words.push_back("hello");
+	words.push_back("world");
+	string result = generateNgrams(words, 3, 5);
+	string expect = "hel 0 hell 0 hello 0 wor 1 worl 1 world 1";
+	ASSERT_EQ(expect, result);
+}
+
+TEST(generate_ngramm, noGenerateNgramm)
+{
+	vector<string> words;
+	words.push_back("hello");
+	words.push_back("world");
+	string result = generateNgrams(words, 6, 7);
+	string expect = "";
+	ASSERT_EQ(expect, result);
+}
+
+TEST(generate_ngramm, noWords)
+{
+	vector<string> words;
+	string result = generateNgrams(words, 0, 7);
+	string expect = "";
+	ASSERT_EQ(expect, result);
+}
