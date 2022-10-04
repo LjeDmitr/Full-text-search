@@ -12,44 +12,93 @@ TEST(parser, normalParsingString)
 	ASSERT_EQ(expect, result);
 }
 
-TEST(deletePuncts, correctData)
+TEST(delete_puncts, correctData)
 {
 	string result = deletePunct("Hello, World.");
 	string expect = "Hello World";
 	ASSERT_EQ(expect, result);
 }
 
-TEST(deletePuncts, noPunctString)
+TEST(delete_puncts, noPunctString)
 {
 	string result = deletePunct("Hello World");
 	string expect = "Hello World";
 	ASSERT_EQ(expect, result);
 }
 
-TEST(deletePuncts, checkViodString)
+TEST(delete_puncts, checkViodString)
 {
 	string result = deletePunct("");
 	string expect = "";
 	ASSERT_EQ(expect, result);
 }
 
-TEST(stringToLow, correctData)
+TEST(string_to_low, correctData)
 {
 	string result = stringToLower("Hello World");
 	string expect = "hello world";
 	ASSERT_EQ(expect, result);
 }
 
-TEST(stringToLow, noLowerCase)
+TEST(string_to_low, noLowerCase)
 {
 	string result = stringToLower("hello world");
 	string expect = "hello world";
 	ASSERT_EQ(expect, result);
 }
 
-TEST(stringToLow, checkViodString)
+TEST(string_to_low, checkViodString)
 {
 	string result = stringToLower("");
 	string expect = "";
 	ASSERT_EQ(expect, result);
+}
+
+TEST(split_words, correctData)
+{
+	vector<string> words;
+	words = splitWords("hello world", words);
+	vector<string> expect;
+	expect.push_back("hello");
+	expect.push_back("world");
+	ASSERT_EQ(expect, words);
+}
+
+TEST(split_words, oneWord)
+{
+	vector<string> words;
+	words = splitWords("helloworld", words);
+	vector<string> expect;
+	expect.push_back("helloworld");
+	ASSERT_EQ(expect, words);
+}
+
+TEST(split_words, checkWhiteSpace)
+{
+	vector<string> words;
+	words = splitWords("hello    world", words);
+	vector<string> expect;
+	expect.push_back("hello");
+	expect.push_back("world");
+	ASSERT_EQ(expect, words);
+}
+
+TEST(split_words, checkWhiteSpaceInBegin)
+{
+	vector<string> words;
+	words = splitWords("   hello world", words);
+	vector<string> expect;
+	expect.push_back("hello");
+	expect.push_back("world");
+	ASSERT_EQ(expect, words);
+}
+
+TEST(split_words, checkWhiteSpaceInEnd)
+{
+	vector<string> words;
+	words = splitWords("hello world   ", words);
+	vector<string> expect;
+	expect.push_back("hello");
+	expect.push_back("world");
+	ASSERT_EQ(expect, words);
 }
