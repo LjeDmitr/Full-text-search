@@ -31,7 +31,7 @@ vector<string> splitWords(string text, vector<string> vector) {
 			}
 		}
 	}
-	if (isspace(text[pos]) == 0) {
+	if (isspace(text[pos]) == 0 && pos < (int)text.size()) {
 		vector.push_back(text.substr(pos));
 	}
 	return vector;
