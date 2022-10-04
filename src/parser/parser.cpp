@@ -4,25 +4,25 @@
 
 using namespace std;
 
-static string deletePunct(string text) {
-	for (int i = 0; i < (int)text.size() - 1; ++i) {
+string deletePunct(string text) {
+	for (int i = 0; i < (int)text.size(); ++i) {
 		if (ispunct(text[i])) {
 			text.erase(i, 1);
-		} 
+		}
 	}
 	return text;
 }
 
-static string stringToLower(string text) {
-	for (int i = 0; i < (int)text.size() - 1; ++i) {
+string stringToLower(string text) {
+	for (int i = 0; i < (int)text.size(); ++i) {
 		text[i] = (char)tolower(text[i]);
 	}
 	return text;
 }
 
-static vector<string> splitWords(string text, vector<string> vector) {
+vector<string> splitWords(string text, vector<string> vector) {
 	int pos = 0;
-	for (int i = 0; i < (int)text.size() - 1; ++i) {
+	for (int i = 0; i < (int)text.size(); ++i) {
 		if (isspace(text[i])) {
 			if (i == pos) {
 				pos++;
@@ -38,7 +38,7 @@ static vector<string> splitWords(string text, vector<string> vector) {
 	return vector;
 }
 
-static vector<string> deleteStopWords(string stop_words[], vector<string> vector) {
+vector<string> deleteStopWords(string stop_words[], vector<string> vector) {
 	auto iter = vector.cbegin();
 	for (int i = 0; i < (int)vector.size(); ++i) {
 		for (int j = 0; j < (int)stop_words->size(); ++j) {
@@ -50,7 +50,7 @@ static vector<string> deleteStopWords(string stop_words[], vector<string> vector
 	return vector;
 }
 
-static string generateNgrams(vector<string> vector, int min_ngram_length, int max_ngram_length) {
+string generateNgrams(vector<string> vector, int min_ngram_length, int max_ngram_length) {
     string result;
 	for (int i = 0; i < (int)vector.size(); ++i) {
 		for (int j = min_ngram_length; j <= max_ngram_length && j <= (int)vector[i].size(); ++j) {
