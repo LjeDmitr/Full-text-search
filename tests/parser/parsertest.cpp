@@ -6,7 +6,7 @@ using namespace std;
 
 TEST(parser, normalParsingString)
 {
-	string stop_words[] = {"and", "dr", "mr"};
+	vector<string> stop_words = {"and", "dr", "mr"};
 	string result = parseStr("Dr. Jekyll and Mr. Hyde", stop_words, 3, 6);
 	string expect = "jek 0 jeky 0 jekyl 0 jekyll 0 hyd 1 hyde 1";
 	ASSERT_EQ(expect, result);
@@ -100,5 +100,46 @@ TEST(split_words, checkWhiteSpaceInEnd)
 	vector<string> expect;
 	expect.push_back("hello");
 	expect.push_back("world");
+	ASSERT_EQ(expect, words);
+}
+
+TEST(delete_stop_words, correctData)
+{
+	vector<string> words;
+	words.push_back("hello");
+	words.push_back("a");
+	words.push_back("world");
+	words.push_back("b");
+	words.push_back("c");
+	vector<string> stop_words = {"a", "b", "c"};
+	words = deleteStopWords(stop_words, words);
+	vector<string> expect;
+	expect.push_back("hello");
+	expect.push_back("world");
+	ASSERT_EQ(expect, words);
+}
+
+TEST(delete_stop_words, noStopWords)
+{
+	vector<string> words;
+	words.push_back("hello");
+	words.push_back("world");
+	vector<string> stop_words = {"a", "b", "c"};
+	words = deleteStopWords(stop_words, words);
+	vector<string> expect;
+	expect.push_back("hello");
+	expect.push_back("world");
+	ASSERT_EQ(expect, words);
+}
+
+TEST(delete_stop_words, onlyStopWords)
+{
+	vector<string> words;
+	words.push_back("a");
+	words.push_back("b");
+	words.push_back("c");
+	vector<string> stop_words = {"a", "b", "c"};
+	words = deleteStopWords(stop_words, words);
+	vector<string> expect;
 	ASSERT_EQ(expect, words);
 }
