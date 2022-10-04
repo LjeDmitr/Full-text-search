@@ -144,6 +144,15 @@ TEST(delete_stop_words, onlyStopWords)
 	ASSERT_EQ(expect, words);
 }
 
+TEST(delete_stop_words, noWords)
+{
+	vector<string> words;
+	vector<string> stop_words = {"a", "b", "c"};
+	words = deleteStopWords(stop_words, words);
+	vector<string> expect;
+	ASSERT_EQ(expect, words);
+}
+
 TEST(generate_ngramm, correctData)
 {
 	vector<string> words;
