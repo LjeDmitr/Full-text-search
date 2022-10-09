@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24.2)
 
 project(
-  fts
+  parser
   VERSION 1.0
   LANGUAGES CXX
 )
