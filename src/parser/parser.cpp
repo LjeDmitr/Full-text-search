@@ -51,9 +51,16 @@ vector<string> deleteStopWords(vector<string> stop_words, vector<string> words) 
 
 string generateNgrams(vector<string> vector, int min_ngram_length, int max_ngram_length) {
     string result;
+	int count_number = 0;
+	bool check_word = false;
 	for (int i = 0; i < (int)vector.size(); ++i) {
 		for (int j = min_ngram_length; j <= max_ngram_length && j <= (int)vector[i].size(); ++j) {
-            result += vector[i].substr(0, j) + " " + to_string(i) + " ";
+            result += vector[i].substr(0, j) + " " + to_string(count_number) + " ";
+			check_word = true;
+		}
+		if (check_word) {
+			++count_number;
+			check_word = false;
 		}
 	}
 	if (!result.empty()) {
