@@ -3,7 +3,9 @@
 
 using namespace std;
 
-string deletePunct(string text) {
+std::vector<std::string> stop_words = {"a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if", "in", "into", "is", "it", "no", "not", "of", "on", "or", "s", "such", "t", "that", "the", "their", "then", "there", "these", "they", "this", "to", "was", "will", "with"}; 
+
+static string deletePunct(string text) {
 	for (int i = 0; i < (int)text.size(); ++i) {
 		if (ispunct(text[i])) {
 			text.erase(i, 1);
@@ -12,14 +14,14 @@ string deletePunct(string text) {
 	return text;
 }
 
-string stringToLower(string text) {
+static string stringToLower(string text) {
 	for (int i = 0; i < (int)text.size(); ++i) {
 		text[i] = (char)tolower(text[i]);
 	}
 	return text;
 }
 
-vector<string> splitWords(string text, vector<string> vector) {
+static vector<string> splitWords(string text, vector<string> vector) {
 	int pos = 0;
 	for (int i = 0; i < (int)text.size(); ++i) {
 		if (isspace(text[i])) {
@@ -37,7 +39,7 @@ vector<string> splitWords(string text, vector<string> vector) {
 	return vector;
 }
 
-vector<string> deleteStopWords(vector<string> stop_words, vector<string> words) {
+static vector<string> deleteStopWords(vector<string> words) {
 	auto iter = words.cbegin();
 	for (int i = 0; i < (int)words.size(); ++i) {
 		for (int j = 0; j < (int)stop_words.size(); ++j) {
@@ -49,7 +51,7 @@ vector<string> deleteStopWords(vector<string> stop_words, vector<string> words) 
 	return words;
 }
 
-string generateNgrams(vector<string> vector, int min_ngram_length, int max_ngram_length) {
+static string generateNgrams(vector<string> vector, int min_ngram_length, int max_ngram_length) {
     string result;
 	int count_number = 0;
 	bool check_word = false;
@@ -69,12 +71,12 @@ string generateNgrams(vector<string> vector, int min_ngram_length, int max_ngram
     return result;
 }
 
-string parseStr(string text, vector<string> stop_words, int ngram_min_length, int ngram_max_length) {
+string parseStr(string text, int ngram_min_length, int ngram_max_length) {
 	text = deletePunct(text);
 	text = stringToLower(text);
 	vector<string> words;
 	words = splitWords(text, words);
-	words = deleteStopWords(stop_words, words);
+	words = deleteStopWords(words);
 	string result = generateNgrams(words, ngram_min_length, ngram_max_length);
     return result;
 }
