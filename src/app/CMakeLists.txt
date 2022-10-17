@@ -15,5 +15,6 @@ target_link_libraries(
   ${target_name}
   PRIVATE
     parser
+    index
     CLI11
 )
