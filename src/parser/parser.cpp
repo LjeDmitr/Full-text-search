@@ -6,7 +6,7 @@ using namespace std;
 std::vector<std::string> stop_words = {"a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if", "in", "into", "is", "it", "no", "not", "of", "on", "or", "s", "such", "t", "that", "the", "their", "then", "there", "these", "they", "this", "to", "was", "will", "with"}; 
 
 static string deletePunct(string text) {
-	for (int i = 0; i < (int)text.size(); ++i) {
+	for (size_t i = 0; i < text.size(); ++i) {
 		if (ispunct(text[i])) {
 			text.erase(i, 1);
 		}
@@ -15,15 +15,15 @@ static string deletePunct(string text) {
 }
 
 static string stringToLower(string text) {
-	for (int i = 0; i < (int)text.size(); ++i) {
+	for (size_t i = 0; i < text.size(); ++i) {
 		text[i] = (char)tolower(text[i]);
 	}
 	return text;
 }
 
 static vector<string> splitWords(string text, vector<string> words) {
-	int pos = 0;
-	for (int i = 0; i < (int)text.size(); ++i) {
+	size_t pos = 0;
+	for (size_t i = 0; i < text.size(); ++i) {
 		if (isspace(text[i])) {
 			if (i == pos) {
 				pos++;
@@ -33,7 +33,7 @@ static vector<string> splitWords(string text, vector<string> words) {
 			}
 		}
 	}
-	if (isspace(text[pos]) == 0 && pos < (int)text.size()) {
+	if (isspace(text[pos]) == 0 && pos < text.size()) {
 		words.push_back(text.substr(pos));
 	}
 	return words;
@@ -41,8 +41,8 @@ static vector<string> splitWords(string text, vector<string> words) {
 
 static vector<string> deleteStopWords(vector<string> words) {
 	auto iter = words.cbegin();
-	for (int i = 0; i < (int)words.size(); ++i) {
-		for (int j = 0; j < (int)stop_words.size(); ++j) {
+	for (size_t i = 0; i < words.size(); ++i) {
+		for (size_t j = 0; j < stop_words.size(); ++j) {
 			if (words[i] == stop_words[j]) {
 				words.erase(iter + i);
 			}
@@ -55,7 +55,7 @@ static vector<pair<string, int>> generateNgrams(vector<string> words, int min_ng
 	vector<pair<string, int>> ngrams;
 	int count_number = 0;
 	bool check_ngrams = false;
-	for (int i = 0; i < (int)words.size(); ++i) {
+	for (size_t i = 0; i < words.size(); ++i) {
 		for (int j = min_ngram_length; j <= max_ngram_length && j <= (int)words[i].size(); ++j) {
             ngrams.push_back(make_pair(words[i].substr(0, j), count_number));
 			check_ngrams = true;
@@ -70,7 +70,7 @@ static vector<pair<string, int>> generateNgrams(vector<string> words, int min_ng
 
 static string makeParsingStr(vector<pair<string, int>> ngrams) {
  	string result;
-	for (int i = 0; i < (int)ngrams.size(); ++i) {
+	for (size_t i = 0; i < ngrams.size(); ++i) {
         result += ngrams[i].first + " " + to_string(ngrams[i].second) + " ";
 	}
 	if (!result.empty()) {
