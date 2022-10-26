@@ -18,6 +18,9 @@ class Index
 	public:
 		std::pair<std::string, std::string> getDocs();
 		std::pair<std::string, std::vector<term>> getEntries();
+		void setDocs (std::string key, std::string text);
+		void setEntries (std::string key, std::vector<term> terms);
+		void correct_index(std::string doc_id, std::string hash, std::pair<std::string, int> ngram);
 };
 
 class indexBuilder
