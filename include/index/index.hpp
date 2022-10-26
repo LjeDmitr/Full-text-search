@@ -30,3 +30,9 @@ class indexBuilder
 		std::vector<Index> getIndexes();
 		Index index(std::string doc_key, std::string doc_text, std::string entries_key, std::vector<term> entries_terms);
 };
+
+class textIndexWriter
+{
+	public:
+		static void write(std::string path, Index index);
+};
