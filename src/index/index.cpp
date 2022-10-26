@@ -102,3 +102,10 @@ void indexBuilder::add_document(string document_id, string text) {
 		}
 	}
 }
+
+Index indexBuilder::index(string doc_key, string doc_text, string entries_key, vector<term> entries_terms) {
+	Index index;
+	index.setDocs(doc_key, doc_text);
+	index.setEntries(entries_key, entries_terms);
+	return index;
+}
