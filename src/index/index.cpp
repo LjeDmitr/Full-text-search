@@ -109,3 +109,24 @@ Index indexBuilder::index(string doc_key, string doc_text, string entries_key, v
 	index.setEntries(entries_key, entries_terms);
 	return index;
 }
+
+void textIndexWriter::write(string path, Index index) {
+	ofstream doc(path + "/docs/" + index.getDocs().first);
+	ofstream entries(path + "/entries/" + index.getEntries().first);
+	doc << index.getDocs().second;
+	if (!doc.is_open() || !entries.is_open()) {
+		cout << "error" << endl;
+	}
+	for (auto term : index.getEntries().second) {
+		entries << term.text << " " << term.doc_count << " ";
+		for (auto doc_id_pos : term.doc_id_and_pos_count) {
+			entries << doc_id_pos.first << " " << doc_id_pos.second << " ";
+			for (auto poss : term.pos) {
+				entries << poss << " ";
+			}
+		}
+		entries << endl;
+	}
+	doc.close();
+	entries.close();
+}
