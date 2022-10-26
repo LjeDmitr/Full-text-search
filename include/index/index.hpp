@@ -2,6 +2,14 @@
 #include <string>
 #include <vector>
 
+struct term
+{
+	int doc_count;
+	std::vector<int> pos;
+	std::string text;
+	std::vector<std::pair<std::string, int>> doc_id_and_pos_count;
+};
+
 class Index
 {
 	private:
