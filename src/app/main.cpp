@@ -1,12 +1,15 @@
-#include <parser/parser.hpp>
+#include <index/index.hpp>
+#include <iostream>
 
 using namespace std;
 
 int main() {
-	string text = "Dr. Jekyll and Mr. Hyde";
-	int ngram_min_length = 3;
-	int ngram_max_length = 6;
-	cout << parseStr(text, ngram_min_length, ngram_max_length) << endl;
-
+	indexBuilder test;
+	test.add_document("199903", "The Matrix");
+	test.add_document("200305", "The Matrix Reloaded");
+	test.add_document("200311", "The Matrix Revolutions");
+	for (auto index : test.getIndexes()) {
+		textIndexWriter::write("index", index);
+	}
 	return 0;
 }
