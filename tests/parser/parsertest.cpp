@@ -89,6 +89,6 @@ TEST(Parser, repeating_word)
 {
 	parser parserTest;
 	parserTest.parseStr("The Matrix reload matrix", 3, 6);
-	string expect = "mat 0 matr 0 matri 0 matrix 0 rel 1 relo 1 reloa 1 reload 1 mat 2 matr 2 matri 2 matrix 2";
+	string expect = "mat 0 2 matr 0 2 matri 0 2 matrix 0 2 rel 1 relo 1 reloa 1 reload 1";
 	ASSERT_EQ(expect, parserTest.getParsingStr());
 }
