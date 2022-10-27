@@ -51,27 +51,47 @@ static vector<string> deleteStopWords(vector<string> words) {
 	return words;
 }
 
-static vector<pair<string, int>> generateNgrams(vector<string> words, int min_ngram_length, int max_ngram_length) {
-	vector<pair<string, int>> ngrams;
-	int count_number = 0;
-	bool check_ngrams = false;
+static vector<pair<string, vector<int>>> generateNgrams(vector<string> words, int min_ngram_length, int max_ngram_length) {
+	vector<pair<string, vector<int>>> ngrams;
+	vector<pair<string, vector<int>>>::iterator iter;
+	int count_pos = 0;
+	bool check_ngrams = false, check_iter = false;
 	for (size_t i = 0; i < words.size(); ++i) {
 		for (int j = min_ngram_length; j <= max_ngram_length && j <= (int)words[i].size(); ++j) {
-            ngrams.push_back(make_pair(words[i].substr(0, j), count_number));
-			check_ngrams = true;
+			iter = ngrams.begin();
+			for (size_t k = 0; k < ngrams.size(); k++, iter++) {
+				if (ngrams[k].first == words[i].substr(0, j)) {
+					check_iter = true;
+					break;
+				}
+			}
+			if (!check_iter) {
+				iter = ngrams.end();
+			}
+			if (iter == ngrams.end()) {
+				vector<int> new_vector = {count_pos};
+				ngrams.push_back(make_pair(words[i].substr(0, j), new_vector));
+				check_ngrams = true;
+			} else {
+				iter->second.push_back(count_pos);
+				check_ngrams = true;
+			}
 		}
 		if (check_ngrams) {
-			++count_number;
+			++count_pos;
 			check_ngrams = false;
 		}
 	}
     return ngrams;
 }
 
-static string makeParsingStr(vector<pair<string, int>> ngrams) {
+static string makeParsingStr(vector<pair<string, vector<int>>> ngrams) {
  	string result;
 	for (size_t i = 0; i < ngrams.size(); ++i) {
-        result += ngrams[i].first + " " + to_string(ngrams[i].second) + " ";
+        result += ngrams[i].first + " ";
+		for (auto pos : ngrams[i].second) {
+			result += to_string(pos) + " ";
+		}
 	}
 	if (!result.empty()) {
 		result.erase(result.size() - 1);
@@ -93,6 +113,6 @@ string parser::getParsingStr() {
 	return parsing_str;
 }
 
-vector<pair<string, int>> parser::getNgrams() {
+vector<pair<string, vector<int>>> parser::getNgrams() {
 	return ngrams;
 }
