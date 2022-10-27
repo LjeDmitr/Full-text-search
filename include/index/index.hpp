@@ -5,9 +5,8 @@
 struct term
 {
 	int doc_count;
-	std::vector<int> pos;
 	std::string text;
-	std::vector<std::pair<std::string, int>> doc_id_and_pos_count;
+	std::vector<std::pair<std::string, std::vector<int>>> doc_id_and_pos;
 };
 
 class Index
@@ -20,7 +19,7 @@ class Index
 		std::pair<std::string, std::vector<term>> getEntries();
 		void setDocs (std::string key, std::string text);
 		void setEntries (std::string key, std::vector<term> terms);
-		void correct_index(std::string doc_id, std::string hash, std::pair<std::string, int> ngram);
+		void correct_index(std::string doc_id, std::string hash, std::string term, std::vector<int> pos);
 };
 
 class indexBuilder
