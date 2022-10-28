@@ -89,13 +89,27 @@ Index indexBuilder::index(string doc_key, string doc_text, string entries_key, v
 	return index;
 }
 
+bool demo_exists(const fs::path& p, fs::file_status s = fs::file_status{})
+{
+    if(fs::status_known(s) ? fs::exists(s) : fs::exists(p))
+        return true;
+    else
+        return false;
+}
+
 void textIndexWriter::write(string path, Index index) {
+	const fs::path path_index{path};
+	if (!demo_exists(path_index))
+		fs::create_directory(path_index);
+	const fs::path path_docs{path + "/docs"};
+	if (!demo_exists(path_docs))
+		fs::create_directory(path_docs);
+	const fs::path path_entries{path + "/entries"};
+	if (!demo_exists(path_entries))
+		fs::create_directory(path_entries);
 	ofstream doc(path + "/docs/" + index.getDocs().first);
 	ofstream entries(path + "/entries/" + index.getEntries().first);
 	doc << index.getDocs().second;
-	if (!doc.is_open() || !entries.is_open()) {
-		cout << "error" << endl;
-	}
 	for (auto term : index.getEntries().second) {
 		entries << term.text << " " << term.doc_count << " ";
 		for (auto doc_id_pos : term.doc_id_and_pos) {

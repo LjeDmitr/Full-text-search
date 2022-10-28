@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 struct term
 {
@@ -38,3 +41,5 @@ class textIndexWriter
 	public:
 		static void write(std::string path, Index index);
 };
+
+bool demo_exists(const fs::path& p, fs::file_status);
