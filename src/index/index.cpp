@@ -123,3 +123,18 @@ void textIndexWriter::write(string path, Index index) {
 	doc.close();
 	entries.close();
 }
+
+string textIndexWriter::testIndex(Index index) {
+	string result_index;
+	for (auto term : index.getEntries().second) {
+		result_index += term.text + " " + to_string(term.doc_count) + " ";
+		for (auto doc_id_pos : term.doc_id_and_pos) {
+			result_index += doc_id_pos.first + " " + to_string(doc_id_pos.second.size()) + " ";
+			for (auto poss : doc_id_pos.second) {
+				result_index += to_string(poss) + " ";
+			}
+		}
+		result_index += "\n";
+	}
+	return result_index;
+}

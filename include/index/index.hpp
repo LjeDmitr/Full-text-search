@@ -40,6 +40,7 @@ class textIndexWriter
 {
 	public:
 		static void write(std::string path, Index index);
+		static std::string testIndex(Index index);
 };
 
 bool demo_exists(const fs::path& p, fs::file_status);
