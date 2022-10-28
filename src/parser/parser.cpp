@@ -3,8 +3,10 @@
 
 using namespace std;
 
-string deletePunct(string text) {
-	for (int i = 0; i < (int)text.size(); ++i) {
+std::vector<std::string> stop_words = {"a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if", "in", "into", "is", "it", "no", "not", "of", "on", "or", "s", "such", "t", "that", "the", "their", "then", "there", "these", "they", "this", "to", "was", "will", "with"}; 
+
+static string deletePunct(string text) {
+	for (size_t i = 0; i < text.size(); ++i) {
 		if (ispunct(text[i])) {
 			text.erase(i, 1);
 		}
@@ -12,35 +14,35 @@ string deletePunct(string text) {
 	return text;
 }
 
-string stringToLower(string text) {
-	for (int i = 0; i < (int)text.size(); ++i) {
+static string stringToLower(string text) {
+	for (size_t i = 0; i < text.size(); ++i) {
 		text[i] = (char)tolower(text[i]);
 	}
 	return text;
 }
 
-vector<string> splitWords(string text, vector<string> vector) {
-	int pos = 0;
-	for (int i = 0; i < (int)text.size(); ++i) {
+static vector<string> splitWords(string text, vector<string> words) {
+	size_t pos = 0;
+	for (size_t i = 0; i < text.size(); ++i) {
 		if (isspace(text[i])) {
 			if (i == pos) {
 				pos++;
 			} else {
-				vector.push_back(text.substr(pos, i - pos));
+				words.push_back(text.substr(pos, i - pos));
 				pos = i + 1;
 			}
 		}
 	}
-	if (isspace(text[pos]) == 0 && pos < (int)text.size()) {
-		vector.push_back(text.substr(pos));
+	if (isspace(text[pos]) == 0 && pos < text.size()) {
+		words.push_back(text.substr(pos));
 	}
-	return vector;
+	return words;
 }
 
-vector<string> deleteStopWords(vector<string> stop_words, vector<string> words) {
+static vector<string> deleteStopWords(vector<string> words) {
 	auto iter = words.cbegin();
-	for (int i = 0; i < (int)words.size(); ++i) {
-		for (int j = 0; j < (int)stop_words.size(); ++j) {
+	for (size_t i = 0; i < words.size(); ++i) {
+		for (size_t j = 0; j < stop_words.size(); ++j) {
 			if (words[i] == stop_words[j]) {
 				words.erase(iter + i);
 			}
@@ -49,18 +51,46 @@ vector<string> deleteStopWords(vector<string> stop_words, vector<string> words) 
 	return words;
 }
 
-string generateNgrams(vector<string> vector, int min_ngram_length, int max_ngram_length) {
-    string result;
-	int count_number = 0;
-	bool check_word = false;
-	for (int i = 0; i < (int)vector.size(); ++i) {
-		for (int j = min_ngram_length; j <= max_ngram_length && j <= (int)vector[i].size(); ++j) {
-            result += vector[i].substr(0, j) + " " + to_string(count_number) + " ";
-			check_word = true;
+static vector<pair<string, vector<int>>> generateNgrams(vector<string> words, int min_ngram_length, int max_ngram_length) {
+	vector<pair<string, vector<int>>> ngrams;
+	vector<pair<string, vector<int>>>::iterator iter;
+	int count_pos = 0;
+	bool check_ngrams = false, check_iter = false;
+	for (size_t i = 0; i < words.size(); ++i) {
+		for (int j = min_ngram_length; j <= max_ngram_length && j <= (int)words[i].size(); ++j) {
+			iter = ngrams.begin();
+			for (size_t k = 0; k < ngrams.size(); k++, iter++) {
+				if (ngrams[k].first == words[i].substr(0, j)) {
+					check_iter = true;
+					break;
+				}
+			}
+			if (!check_iter) {
+				iter = ngrams.end();
+			}
+			if (iter == ngrams.end()) {
+				vector<int> new_vector = {count_pos};
+				ngrams.push_back(make_pair(words[i].substr(0, j), new_vector));
+				check_ngrams = true;
+			} else {
+				iter->second.push_back(count_pos);
+				check_ngrams = true;
+			}
 		}
-		if (check_word) {
-			++count_number;
-			check_word = false;
+		if (check_ngrams) {
+			++count_pos;
+			check_ngrams = false;
+		}
+	}
+    return ngrams;
+}
+
+static string makeParsingStr(vector<pair<string, vector<int>>> ngrams) {
+ 	string result;
+	for (size_t i = 0; i < ngrams.size(); ++i) {
+        result += ngrams[i].first + " ";
+		for (auto pos : ngrams[i].second) {
+			result += to_string(pos) + " ";
 		}
 	}
 	if (!result.empty()) {
@@ -69,12 +99,20 @@ string generateNgrams(vector<string> vector, int min_ngram_length, int max_ngram
     return result;
 }
 
-string parseStr(string text, vector<string> stop_words, int ngram_min_length, int ngram_max_length) {
+void parser::parseStr(string text, int ngram_min_length, int ngram_max_length) {
 	text = deletePunct(text);
 	text = stringToLower(text);
 	vector<string> words;
 	words = splitWords(text, words);
-	words = deleteStopWords(stop_words, words);
-	string result = generateNgrams(words, ngram_min_length, ngram_max_length);
-    return result;
+	words = deleteStopWords(words);
+	ngrams = generateNgrams(words, ngram_min_length, ngram_max_length);
+	parsing_str = makeParsingStr(ngrams);
+}
+
+string parser::getParsingStr() {
+	return parsing_str;
+}
+
+vector<pair<string, vector<int>>> parser::getNgrams() {
+	return ngrams;
 }

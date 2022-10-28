@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24.2)
 
 project(
-  parser
+  index
   VERSION 1.0
   LANGUAGES CXX
 )
