@@ -30,8 +30,8 @@ vector<Index> indexBuilder::getIndexes() {
 }
 
 static bool hashUniquenessCheck(string hash, vector<Index> indexes) {
-  for (auto element : indexes) {
-    if (hash == element.getEntries().first) {
+  for (size_t i = 0; i < indexes.size(); ++i) {
+    if (hash == indexes[i].getEntries().first) {
       return false;
     }
   }
@@ -118,12 +118,14 @@ void textIndexWriter::write(string path, Index index) {
   ofstream doc(path + "/docs/" + index.getDocs().first);
   ofstream entries(path + "/entries/" + index.getEntries().first);
   doc << index.getDocs().second;
-  for (auto term : index.getEntries().second) {
-    entries << term.text << " " << term.doc_count << " ";
-    for (auto doc_id_pos : term.doc_id_and_pos) {
-      entries << doc_id_pos.first << " " << doc_id_pos.second.size() << " ";
-      for (auto poss : doc_id_pos.second) {
-        entries << poss << " ";
+  vector<term> terms = index.getEntries().second;
+  for (size_t i = 0; i < terms.size(); ++i) {
+    entries << terms[i].text << " " << terms[i].doc_count << " ";
+    for (size_t j = 0; j < terms[i].doc_id_and_pos.size(); ++j) {
+      entries << terms[i].doc_id_and_pos[j].first << " "
+              << terms[i].doc_id_and_pos[j].second.size() << " ";
+      for (size_t k = 0; k < terms[i].doc_id_and_pos[j].second.size(); ++k) {
+        entries << terms[i].doc_id_and_pos[j].second[k] << " ";
       }
     }
     entries << endl;

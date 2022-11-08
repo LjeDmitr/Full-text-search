@@ -20,10 +20,11 @@ TEST(index, normal_data) {
       "200305 1 1 \n",
       "rev 1 200311 1 1 \nrevo 1 200311 1 1 \nrevol 1 200311 1 1 \nrevolu 1 "
       "200311 1 1 \n"};
-  for (auto index : index_builder.getIndexes()) {
-    ASSERT_EQ(file_name[i], index.getDocs().first);
-    ASSERT_EQ(file_text[i], index.getDocs().second);
-    ASSERT_EQ(expect[i], textIndexWriter::testIndex(index));
+  vector<Index> indexes = index_builder.getIndexes();
+  for (size_t j = 0; j < indexes.size(); ++j) {
+    ASSERT_EQ(file_name[i], indexes[j].getDocs().first);
+    ASSERT_EQ(file_text[i], indexes[j].getDocs().second);
+    ASSERT_EQ(expect[i], textIndexWriter::testIndex(indexes[j]));
     i++;
   }
 }
@@ -45,10 +46,11 @@ TEST(index, repeating_term_in_one_file) {
       "200305 1 1 \n",
       "rev 1 200311 1 1 \nrevo 1 200311 1 1 \nrevol 1 200311 1 1 \nrevolu 1 "
       "200311 1 1 \n"};
-  for (auto index : index_builder.getIndexes()) {
-    ASSERT_EQ(file_name[i], index.getDocs().first);
-    ASSERT_EQ(file_text[i], index.getDocs().second);
-    ASSERT_EQ(expect[i], textIndexWriter::testIndex(index));
+  vector<Index> indexes = index_builder.getIndexes();
+  for (size_t j = 0; j < indexes.size(); ++j) {
+    ASSERT_EQ(file_name[i], indexes[j].getDocs().first);
+    ASSERT_EQ(file_text[i], indexes[j].getDocs().second);
+    ASSERT_EQ(expect[i], textIndexWriter::testIndex(indexes[j]));
     i++;
   }
 }

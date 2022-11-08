@@ -98,8 +98,8 @@ static string makeParsingStr(vector<pair<string, vector<int>>> ngrams) {
   string result;
   for (size_t i = 0; i < ngrams.size(); ++i) {
     result += ngrams[i].first + " ";
-    for (auto pos : ngrams[i].second) {
-      result += to_string(pos) + " ";
+    for (size_t j = 0; j < ngrams[i].second.size(); ++j) {
+      result += to_string(ngrams[i].second[j]) + " ";
     }
   }
   if (!result.empty()) {
