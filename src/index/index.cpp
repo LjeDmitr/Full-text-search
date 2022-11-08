@@ -140,8 +140,8 @@ string textIndexWriter::testIndex(Index index) {
   for (size_t i = 0; i < terms.size(); ++i) {
     result_index += terms[i].text + " " + to_string(terms[i].doc_count) + " ";
     for (size_t j = 0; j < terms[i].doc_id_and_pos.size(); ++j) {
-      result_index +=
-          terms[i].doc_id_and_pos[j].first + " " + to_string(terms[i].doc_id_and_pos[j].second.size()) + " ";
+      result_index += terms[i].doc_id_and_pos[j].first + " " +
+          to_string(terms[i].doc_id_and_pos[j].second.size()) + " ";
       for (size_t k = 0; k < terms[i].doc_id_and_pos[j].second.size(); ++k) {
         result_index += to_string(terms[i].doc_id_and_pos[j].second[k]) + " ";
       }
