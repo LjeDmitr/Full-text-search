@@ -63,7 +63,7 @@ void Index::correct_index(
 
 void indexBuilder::add_document(string document_id, string text) {
   parser parsing_string;
-  parsing_string.parseStr(text, 3, 6);
+  parsing_string.parseStr(text);
   string hash_hex_str, prev_ngram;
   vector<term> entries_terms;
   vector<pair<string, vector<int>>> ngrams = parsing_string.getNgrams();
