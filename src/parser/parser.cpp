@@ -6,12 +6,6 @@
 using json = nlohmann::json;
 using namespace std;
 
-// std::vector<std::string> stop_words = {
-//     "a",     "an",    "and",  "are",  "as", "at",   "be",   "but",   "by",
-//     "for",   "if",    "in",   "into", "is", "it",   "no",   "not",   "of",
-//     "on",    "or",    "s",    "such", "t",  "that", "the",  "their", "then",
-//     "there", "these", "they", "this", "to", "was",  "will", "with"};
-
 struct Config get_config_from_json(const string& filename) {
   json json_conf;
   ifstream json_stream(filename);
