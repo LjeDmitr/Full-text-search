@@ -16,5 +16,5 @@ target_link_libraries(
   PRIVATE
     parser
     index
-    CLI11
+    search
 )
