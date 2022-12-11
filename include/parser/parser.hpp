@@ -19,4 +19,7 @@ class parser {
   void createNewVector(int first_pos);
   std::string getParsingStr();
   std::vector<std::pair<std::string, std::vector<int>>> getNgrams();
+  static std::vector<std::string> splitWords(
+      std::string text,
+      std::vector<std::string> words);
 };

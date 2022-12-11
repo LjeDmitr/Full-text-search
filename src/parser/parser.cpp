@@ -38,7 +38,7 @@ static string stringToLower(string text) {
   return text;
 }
 
-static vector<string> splitWords(string text, vector<string> words) {
+vector<string> parser::splitWords(string text, vector<string> words) {
   size_t pos = 0;
   for (size_t i = 0; i < text.size(); ++i) {
     if (isspace(text[i])) {
@@ -56,7 +56,9 @@ static vector<string> splitWords(string text, vector<string> words) {
   return words;
 }
 
-static vector<string> deleteStopWords(vector<string> words, struct Config config) {
+static vector<string> deleteStopWords(
+    vector<string> words,
+    struct Config config) {
   auto iter = words.cbegin();
   for (size_t i = 0; i < words.size(); ++i) {
     for (size_t j = 0; j < config.stop_words.size(); ++j) {
@@ -68,7 +70,9 @@ static vector<string> deleteStopWords(vector<string> words, struct Config config
   return words;
 }
 
-static vector<pair<string, vector<int>>> generateNgrams(vector<string> words, struct Config config) {
+static vector<pair<string, vector<int>>> generateNgrams(
+    vector<string> words,
+    struct Config config) {
   vector<pair<string, vector<int>>> ngrams;
   vector<pair<string, vector<int>>>::iterator iter;
   int count_pos = 0;
@@ -123,7 +127,8 @@ void parser::parseStr(string text) {
   text = stringToLower(text);
   vector<string> words;
   words = splitWords(text, words);
-  struct Config config = get_config_from_json("../../../../src/parser/config.json");
+  struct Config config =
+      get_config_from_json("../../../../src/parser/config.json");
   words = deleteStopWords(words, config);
   ngrams = generateNgrams(words, config);
   parsing_str = makeParsingStr(ngrams);
