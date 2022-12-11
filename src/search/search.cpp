@@ -54,7 +54,7 @@ static int countDoc() {
   int file_count = 0;
   DIR* dirp;
   struct dirent* entry;
-  dirp = opendir("index/doc");
+  dirp = opendir("index/docs");
   while ((entry = readdir(dirp)) != NULL) {
     if (entry->d_type == DT_REG) {
       file_count++;
