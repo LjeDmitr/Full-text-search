@@ -13,14 +13,14 @@ int main() {
   for (size_t i = 0; i < indexes.size(); ++i) {
     textIndexWriter::write("index", indexes[i]);
   }
-  // SearchIndex obj;
-  // obj.search("bye earth", "index/entries");
-  // obj.score("100");
-  // obj.score("101");
-  // obj.score("102");
-  // cout << "id\t score\t text" << endl;
-  // for (const auto& result : obj.getSearchResult()) {
-  //   cout << result.first + "\t " << result.second << "\t " << endl;
-  // }
+  SearchIndex obj;
+  obj.search("bye earth", "index/entries");
+  obj.score("100");
+  obj.score("101");
+  obj.score("102");
+  cout << "id\t score\t text" << endl;
+  for (const auto& result : obj.getSearchResult()) {
+    cout << result.first + "\t " << result.second << "\t " << endl;
+  }
   return 0;
 }
