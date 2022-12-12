@@ -49,4 +49,16 @@ class textIndexWriter {
   static std::string testIndex(Index index);
 };
 
+class IndexAccessor {
+ private:
+  std::string doc_text;
+  std::vector<std::pair<std::string, int>> term_doc_list;
+
+ public:
+  std::string getDocText();
+  std::vector<std::pair<std::string, int>> getTermDocList();
+  void readDoc(std::string doc_id);
+  void genDocList(std::string term);
+};
+
 bool demo_exists(const fs::path& p, fs::file_status);
