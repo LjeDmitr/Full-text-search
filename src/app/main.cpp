@@ -1,6 +1,6 @@
 #include <index/index.hpp>
-#include <search/search.hpp>
 #include <iostream>
+#include <search/search.hpp>
 
 using namespace std;
 
@@ -13,14 +13,18 @@ int main() {
   for (size_t i = 0; i < indexes.size(); ++i) {
     textIndexWriter::write("index", indexes[i]);
   }
-  SearchIndex obj;
-  obj.search("bye earth", "index/entries/");
-  obj.score("100");
-  obj.score("101");
-  obj.score("102");
-  cout << "id\t score\t text" << endl;
-  for (const auto& result : obj.getSearchResult()) {
-    cout << result.first + "\t " << result.second << "\t " << endl;
+  SearchIndex index_search;
+  index_search.search("hello world", "index/");
+  index_search.score("100");
+  index_search.score("101");
+  index_search.score("102");
+  cout << "id" << setw(12) << "score" << setw(12) << "text" << endl;
+  IndexAccessor index_access;
+  vector<pair<string, double>> result = index_search.getSearchResult();
+  for (size_t i = 0; i < result.size(); i++) {
+    index_access.readDoc(result[i].first);
+    cout << result[i].first << setw(12) << result[i].second << setw(16)
+         << index_access.getDocText() << endl;
   }
   return 0;
 }
