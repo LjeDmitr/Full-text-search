@@ -22,21 +22,25 @@ void SearchIndex::search(string str, string path_index) {
   string hash_hex_str, buff;
   vector<pair<string, vector<int>>> ngrams = parsing_string.getNgrams();
   ifstream index;
+  vector<string> entries;
   for (size_t i = 0; i < ngrams.size(); i++) {
     picosha2::hash256_hex_string(ngrams[i].first.substr(0, 3), hash_hex_str);
     hash_hex_str = hash_hex_str.substr(0, 6);
     index.open(path_index + hash_hex_str);
     if (index.is_open()) {
-      getline(index, buff);
-      vector<string> entries;
-      entries = parser::splitWords(buff, entries);
-      struct search_info query;
-      if (ngrams[i].first == entries[0]) {
-        query.df = stoi(entries[1]);
-        query.text = entries[0];
-        query = docInfo(query, entries);
+      while (getline(index, buff)) {
+        entries = parser::splitWords(buff, entries);
+        struct search_info query;
+        if (ngrams[i].first == entries[0]) {
+          query.df = stoi(entries[1]);
+          query.text = entries[0];
+          query = docInfo(query, entries);
+          quers.push_back(query);
+        }
+        buff.clear();
+        entries.clear();
       }
-      quers.push_back(query);
+      index.close();
     }
   }
 }
@@ -70,7 +74,9 @@ void SearchIndex::score(string doc_id) {
   for (size_t i = 0; i < quers.size(); i++) {
     score += termFrequency(quers[i].tf, doc_id) * log(N / quers[i].df);
   }
-  search_result.push_back(make_pair(doc_id, score));
+  if (score != 0) {
+    search_result.push_back(make_pair(doc_id, score));
+  }
 }
 
 vector<pair<string, double>> SearchIndex::getSearchResult() {
