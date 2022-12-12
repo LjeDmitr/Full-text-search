@@ -16,6 +16,7 @@ target_link_libraries(
   ${target_name}
   PRIVATE
     search
+    index
     gtest_main
     gtest
 )
