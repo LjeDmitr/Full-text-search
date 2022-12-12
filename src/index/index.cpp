@@ -78,6 +78,7 @@ void indexBuilder::add_document(string document_id, string text) {
       }
       i--;
       indexes.push_back(index(document_id, text, hash_hex_str, entries_terms));
+      entries_terms.clear();
     } else {
       for (size_t j = 0; j < indexes.size(); j++) {
         indexes[j].correct_index(
