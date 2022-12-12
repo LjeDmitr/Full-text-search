@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <search/search.hpp>
 #include <index/index.hpp>
+#include <search/search.hpp>
 
 using namespace std;
 

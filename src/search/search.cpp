@@ -75,8 +75,9 @@ void SearchIndex::score(string doc_id) {
 }
 
 vector<pair<string, double>> SearchIndex::getSearchResult() {
-  sort(search_result.begin(), search_result.end(), [](const auto& x, const auto& y) {
-    return x.second > y.second;
-  });
+  sort(
+      search_result.begin(),
+      search_result.end(),
+      [](const auto& x, const auto& y) { return x.second > y.second; });
   return search_result;
 }
