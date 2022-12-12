@@ -1,8 +1,8 @@
-set(target_name parser)
-set(HEADER_LIST "${CMAKE_SOURCE_DIR}/include/parser/parser.hpp")
+set(target_name search)
+set(HEADER_LIST "${CMAKE_SOURCE_DIR}/include/search/search.hpp")
 
 add_library(${target_name} STATIC
-  parser.cpp
+  search.cpp
   ${HEADER_LIST})
 
 include(CompileOptions)
@@ -17,5 +17,6 @@ target_include_directories(
 target_link_libraries(
   ${target_name}
   PRIVATE
-    nlohmann_json
+    picosha2
+    parser
 )

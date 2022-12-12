@@ -63,7 +63,7 @@ void Index::correct_index(
 
 void indexBuilder::add_document(string document_id, string text) {
   parser parsing_string;
-  parsing_string.parseStr(text, 3, 6);
+  parsing_string.parseStr(text);
   string hash_hex_str, prev_ngram;
   vector<term> entries_terms;
   vector<pair<string, vector<int>>> ngrams = parsing_string.getNgrams();
@@ -78,6 +78,7 @@ void indexBuilder::add_document(string document_id, string text) {
       }
       i--;
       indexes.push_back(index(document_id, text, hash_hex_str, entries_terms));
+      entries_terms.clear();
     } else {
       for (size_t j = 0; j < indexes.size(); j++) {
         indexes[j].correct_index(
@@ -149,4 +150,47 @@ string textIndexWriter::testIndex(Index index) {
     result_index += "\n";
   }
   return result_index;
+}
+
+string IndexAccessor::getDocText() {
+  return doc_text;
+}
+vector<pair<string, int>> IndexAccessor::getTermDocList() {
+  return term_doc_list;
+}
+void IndexAccessor::readDoc(std::string doc_id) {
+  ifstream document("index/docs/" + doc_id);
+  string buff;
+  if (document.is_open()) {
+    doc_text.clear();
+    while (getline(document, buff)) {
+      doc_text += buff;
+    }
+    document.close();
+  }
+}
+
+void IndexAccessor::genDocList(std::string term) {
+  string hash_hex_str, buff;
+  ifstream index;
+  vector<string> entries;
+  picosha2::hash256_hex_string(term.substr(0, 3), hash_hex_str);
+  hash_hex_str = hash_hex_str.substr(0, 6);
+  index.open("index/entries/" + hash_hex_str);
+  if (index.is_open()) {
+    term_doc_list.clear();
+    while (getline(index, buff)) {
+      entries = parser::splitWords(buff, entries);
+      if (term == entries[0]) {
+        for (size_t i = 2; i < entries.size(); i++) {
+          term_doc_list.push_back(make_pair(entries[i], stoi(entries[i + 1])));
+          i++;
+          i += stoi(entries[i]);
+        }
+      }
+      buff.clear();
+      entries.clear();
+    }
+    index.close();
+  }
 }
