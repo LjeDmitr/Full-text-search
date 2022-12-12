@@ -14,7 +14,7 @@ int main() {
     textIndexWriter::write("index", indexes[i]);
   }
   SearchIndex obj;
-  obj.search("bye earth", "index/entries");
+  obj.search("bye earth", "index/entries/");
   obj.score("100");
   obj.score("101");
   obj.score("102");
