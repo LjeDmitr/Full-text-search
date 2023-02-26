@@ -18,7 +18,7 @@ void SearchIndex::search(string str, string path_index) {
   for (size_t i = 0; i < ngrams.size(); i++) {
     picosha2::hash256_hex_string(ngrams[i].first.substr(0, 3), hash_hex_str);
     hash_hex_str = hash_hex_str.substr(0, 6);
-    index.open(path_index + "entries/" + hash_hex_str);
+    index.open(path_index + "/entries/" + hash_hex_str);
     if (index.is_open()) {
       while (getline(index, buff)) {
         entries = parser::splitWords(buff, entries);
@@ -48,7 +48,7 @@ static int termFrequency(vector<pair<string, int>> query_tf, string doc_id) {
   return 0;
 }
 
-static int countDoc() {
+int countDoc() {
   int file_count = 0;
   DIR* dirp;
   struct dirent* entry;

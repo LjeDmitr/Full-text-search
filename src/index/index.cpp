@@ -5,14 +5,6 @@
 
 using namespace std;
 
-void Index::setDocs(string key, string text) {
-  docs = make_pair(key, text);
-}
-
-pair<string, string> Index::getDocs() {
-  return docs;
-}
-
 void Index::setEntries(string key, vector<term> terms) {
   entries = make_pair(key, terms);
 }
@@ -27,6 +19,10 @@ void indexBuilder::setIndexes(Index index) {
 
 vector<Index> indexBuilder::getIndexes() {
   return indexes;
+}
+
+vector<pair<string, string>> indexBuilder::getDocs() {
+  return docs;
 }
 
 static bool hashUniquenessCheck(string hash, vector<Index> indexes) {
@@ -77,7 +73,7 @@ void indexBuilder::add_document(string document_id, string text) {
         i++;
       }
       i--;
-      indexes.push_back(index(document_id, text, hash_hex_str, entries_terms));
+      indexes.push_back(index(hash_hex_str, entries_terms));
       entries_terms.clear();
     } else {
       for (size_t j = 0; j < indexes.size(); j++) {
@@ -86,15 +82,11 @@ void indexBuilder::add_document(string document_id, string text) {
       }
     }
   }
+  docs.push_back(make_pair(document_id, text));
 }
 
-Index indexBuilder::index(
-    string doc_key,
-    string doc_text,
-    string entries_key,
-    vector<term> entries_terms) {
+Index indexBuilder::index(string entries_key, vector<term> entries_terms) {
   Index index;
-  index.setDocs(doc_key, doc_text);
   index.setEntries(entries_key, entries_terms);
   return index;
 }
@@ -106,19 +98,37 @@ bool demo_exists(const fs::path& p, fs::file_status s = fs::file_status{}) {
     return false;
 }
 
+void textIndexWriter::documentsCreate(
+    string path,
+    vector<pair<string, string>> docs) {
+  const fs::path path_index{path};
+  if (!demo_exists(path_index)) {
+    fs::create_directory(path_index);
+  }
+  const fs::path path_docs{path + "/docs"};
+  if (!demo_exists(path_docs)) {
+    fs::create_directory(path_docs);
+  }
+  ofstream doc;
+  for (size_t i = 0; i < docs.size(); i++) {
+    doc.open(path + "/docs/" + docs[i].first);
+    if (doc.is_open()) {
+      doc << docs[i].second;
+      doc.close();
+    }
+  }
+}
+
 void textIndexWriter::write(string path, Index index) {
   const fs::path path_index{path};
-  if (!demo_exists(path_index))
+  if (!demo_exists(path_index)) {
     fs::create_directory(path_index);
-  const fs::path path_docs{path + "/docs"};
-  if (!demo_exists(path_docs))
-    fs::create_directory(path_docs);
+  }
   const fs::path path_entries{path + "/entries"};
-  if (!demo_exists(path_entries))
+  if (!demo_exists(path_entries)) {
     fs::create_directory(path_entries);
-  ofstream doc(path + "/docs/" + index.getDocs().first);
+  }
   ofstream entries(path + "/entries/" + index.getEntries().first);
-  doc << index.getDocs().second;
   vector<term> terms = index.getEntries().second;
   for (size_t i = 0; i < terms.size(); ++i) {
     entries << terms[i].text << " " << terms[i].doc_count << " ";
@@ -131,7 +141,6 @@ void textIndexWriter::write(string path, Index index) {
     }
     entries << endl;
   }
-  doc.close();
   entries.close();
 }
 
@@ -193,4 +202,19 @@ void IndexAccessor::genDocList(std::string term) {
     }
     index.close();
   }
+}
+
+vector<string> IndexAccessor::allDocNames(string indexPath) {
+  vector<string> docNames;
+  string tmpName;
+  fs::path path;
+
+  for (auto const& p : fs::directory_iterator(indexPath + "/docs")) {
+    path = p;
+    tmpName = path.fs::path::generic_string();
+    tmpName = tmpName.substr(tmpName.find_last_of("/") + 1);
+    docNames.push_back(tmpName);
+  }
+
+  return docNames;
 }

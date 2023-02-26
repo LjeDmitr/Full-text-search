@@ -18,3 +18,5 @@ class SearchIndex {
   void score(std::string doc_id);
   std::vector<std::pair<std::string, double>> getSearchResult();
 };
+
+int countDoc();

@@ -1,4 +1,4 @@
-set(target_name app)
+set(target_name fts)
 
 add_executable(${target_name} main.cpp)
 
@@ -17,4 +17,6 @@ target_link_libraries(
     parser
     index
     search
+    CLI11
+    rapidcsv
 )
