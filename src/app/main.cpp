@@ -50,7 +50,11 @@ int main(int argc, char** argv) {
     for (size_t i = 0; i < docsNames.size(); i++) {
       book_search.score(docsNames[i]);
     }
-    cout << "id" << "\t" << "score" << "\t" << "text" << endl;
+    cout << "id"
+         << "\t"
+         << "score"
+         << "\t"
+         << "text" << endl;
     IndexAccessor index_access;
     vector<pair<string, double>> result = book_search.getSearchResult();
     for (size_t i = 0; i < result.size(); i++) {
