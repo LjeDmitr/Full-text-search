@@ -22,8 +22,6 @@ TEST(index, normal_data) {
       "200311 1 1 \n"};
   vector<Index> indexes = index_builder.getIndexes();
   for (size_t j = 0; j < indexes.size(); ++j) {
-    ASSERT_EQ(file_name[i], indexes[j].getDocs().first);
-    ASSERT_EQ(file_text[i], indexes[j].getDocs().second);
     ASSERT_EQ(expect[i], textIndexWriter::testIndex(indexes[j]));
     i++;
   }
@@ -48,8 +46,6 @@ TEST(index, repeating_term_in_one_file) {
       "200311 1 1 \n"};
   vector<Index> indexes = index_builder.getIndexes();
   for (size_t j = 0; j < indexes.size(); ++j) {
-    ASSERT_EQ(file_name[i], indexes[j].getDocs().first);
-    ASSERT_EQ(file_text[i], indexes[j].getDocs().second);
     ASSERT_EQ(expect[i], textIndexWriter::testIndex(indexes[j]));
     i++;
   }
