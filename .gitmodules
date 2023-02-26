@@ -10,3 +10,6 @@
 [submodule "external/json"]
 	path = external/json
 	url = https://github.com/nlohmann/json.git
+[submodule "external/rapidcsv"]
+	path = external/rapidcsv
+	url = https://github.com/d99kris/rapidcsv.git
