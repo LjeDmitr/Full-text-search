@@ -9,10 +9,8 @@ TEST(search, bye_earth) {
   index_builder.add_document("100", "Hello World");
   index_builder.add_document("101", "Bye World");
   index_builder.add_document("102", "Hello Earth");
-  vector<Index> indexes = index_builder.getIndexes();
-  for (size_t i = 0; i < indexes.size(); ++i) {
-    textIndexWriter::write("index", indexes[i]);
-  }
+  textIndexWriter::write("index", index_builder);
+  
   SearchIndex index_search;
   index_search.search("bye earth", "index/");
   index_search.score("100");
@@ -31,10 +29,8 @@ TEST(search, hello_world) {
   index_builder.add_document("100", "Hello World");
   index_builder.add_document("101", "Bye World");
   index_builder.add_document("102", "Hello Earth");
-  vector<Index> indexes = index_builder.getIndexes();
-  for (size_t i = 0; i < indexes.size(); ++i) {
-    textIndexWriter::write("index", indexes[i]);
-  }
+  textIndexWriter::write("index", index_builder);
+
   SearchIndex index_search;
   index_search.search("hello world", "index/");
   index_search.score("100");

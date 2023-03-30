@@ -98,9 +98,7 @@ bool demo_exists(const fs::path& p, fs::file_status s = fs::file_status{}) {
     return false;
 }
 
-void textIndexWriter::documentsCreate(
-    string path,
-    vector<pair<string, string>> docs) {
+void textIndexWriter::documentsCreate(string path, indexBuilder indexBuilder) {
   const fs::path path_index{path};
   if (!demo_exists(path_index)) {
     fs::create_directory(path_index);
@@ -110,6 +108,7 @@ void textIndexWriter::documentsCreate(
     fs::create_directory(path_docs);
   }
   ofstream doc;
+  vector<pair<string, string>> docs = indexBuilder.getDocs();
   for (size_t i = 0; i < docs.size(); i++) {
     doc.open(path + "/docs/" + docs[i].first);
     if (doc.is_open()) {
@@ -119,7 +118,7 @@ void textIndexWriter::documentsCreate(
   }
 }
 
-void textIndexWriter::write(string path, Index index) {
+void textIndexWriter::write(string path, indexBuilder indexBuilder) {
   const fs::path path_index{path};
   if (!demo_exists(path_index)) {
     fs::create_directory(path_index);
@@ -128,20 +127,23 @@ void textIndexWriter::write(string path, Index index) {
   if (!demo_exists(path_entries)) {
     fs::create_directory(path_entries);
   }
-  ofstream entries(path + "/entries/" + index.getEntries().first);
-  vector<term> terms = index.getEntries().second;
-  for (size_t i = 0; i < terms.size(); ++i) {
-    entries << terms[i].text << " " << terms[i].doc_count << " ";
-    for (size_t j = 0; j < terms[i].doc_id_and_pos.size(); ++j) {
-      entries << terms[i].doc_id_and_pos[j].first << " "
-              << terms[i].doc_id_and_pos[j].second.size() << " ";
-      for (size_t k = 0; k < terms[i].doc_id_and_pos[j].second.size(); ++k) {
-        entries << terms[i].doc_id_and_pos[j].second[k] << " ";
+  vector<Index> indexes = indexBuilder.getIndexes();
+  for (size_t in = 0; in < indexes.size(); in++) {
+    ofstream entries(path + "/entries/" + indexes[in].getEntries().first);
+    vector<term> terms = indexes[in].getEntries().second;
+    for (size_t i = 0; i < terms.size(); ++i) {
+      entries << terms[i].text << " " << terms[i].doc_count << " ";
+      for (size_t j = 0; j < terms[i].doc_id_and_pos.size(); ++j) {
+        entries << terms[i].doc_id_and_pos[j].first << " "
+                << terms[i].doc_id_and_pos[j].second.size() << " ";
+        for (size_t k = 0; k < terms[i].doc_id_and_pos[j].second.size(); ++k) {
+          entries << terms[i].doc_id_and_pos[j].second[k] << " ";
+        }
       }
+      entries << endl;
     }
-    entries << endl;
+    entries.close();
   }
-  entries.close();
 }
 
 string textIndexWriter::testIndex(Index index) {

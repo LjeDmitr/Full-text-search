@@ -40,10 +40,8 @@ class indexBuilder {
 
 class textIndexWriter {
  public:
-  static void write(std::string path, Index index);
-  static void documentsCreate(
-      std::string path,
-      std::vector<std::pair<std::string, std::string>> docs);
+  static void write(std::string path, indexBuilder indexBuilder);
+  static void documentsCreate(std::string path, indexBuilder indexBuilder);
   static std::string testIndex(Index index);
 };
 

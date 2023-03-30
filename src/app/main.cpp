@@ -35,14 +35,8 @@ int main(int argc, char** argv) {
       index_builder.add_document(booksId[i], booksName[i]);
     }
 
-    vector<Index> indexes = index_builder.getIndexes();
-    vector<pair<string, string>> documets = index_builder.getDocs();
-    for (size_t i = 0; i < documets.size(); ++i) {
-      textIndexWriter::documentsCreate(indexPath, documets);
-    }
-    for (size_t i = 0; i < indexes.size(); ++i) {
-      textIndexWriter::write(indexPath, indexes[i]);
-    }
+    textIndexWriter::documentsCreate(indexPath, index_builder);
+    textIndexWriter::write(indexPath, index_builder);
   } else if (fts.got_subcommand("search")) {
     SearchIndex book_search;
     book_search.search(query, indexPath);
