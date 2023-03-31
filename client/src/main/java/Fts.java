@@ -4,5 +4,6 @@ public class Fts {
     }
 
     public static native void indexer(String csvPath, String indexPath);
+
     public static native void searcher(String indexPath, String query);
 }

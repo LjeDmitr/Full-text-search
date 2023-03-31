@@ -16,14 +16,23 @@ public class Main {
             map.put("search", searcher);
 
             JCommander jc = new JCommander();
+            jc.setProgramName("Fts");
             jc.addCommand(indexer);
             jc.addCommand(searcher);
             jc.parse(args);
 
-            String name = jc.getParsedCommand();
-            map.get(name).run();
+            if (indexer.Help() || searcher.Help()) {
+                jc.usage();
+            } else {
+                String name = jc.getParsedCommand();
+                if (name == null) {
+                    jc.usage();
+                    return;
+                }
+                map.get(name).run();
+            }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.toString());
         }
     }
 
