@@ -1,4 +1,7 @@
+package com.fts;
+
 import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -19,7 +22,13 @@ public class Main {
             jc.setProgramName("Fts");
             jc.addCommand(indexer);
             jc.addCommand(searcher);
-            jc.parse(args);
+            try {
+                jc.parse(args);
+            } catch (ParameterException ignored) {
+                System.out.println(ignored.getMessage());
+                jc.usage();
+                return;
+            }
 
             if (indexer.Help() || searcher.Help()) {
                 jc.usage();

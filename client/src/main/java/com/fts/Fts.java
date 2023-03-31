@@ -1,3 +1,5 @@
+package com.fts;
+
 public class Fts {
     static {
         System.loadLibrary("fts-c");
