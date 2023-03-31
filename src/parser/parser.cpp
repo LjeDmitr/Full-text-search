@@ -127,8 +127,10 @@ void parser::parseStr(string text) {
   text = stringToLower(text);
   vector<string> words;
   words = splitWords(text, words);
-  struct Config config =
-      get_config_from_json("../../../../src/parser/config.json");
+  string json_path = __FILE__;
+  json_path = json_path.substr(0, json_path.find_last_of("/"));
+  json_path.append("/config.json");
+  struct Config config = get_config_from_json(json_path);
   words = deleteStopWords(words, config);
   ngrams = generateNgrams(words, config);
   parsing_str = makeParsingStr(ngrams);
