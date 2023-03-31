@@ -37,6 +37,7 @@ int main(int argc, char** argv) {
 
     textIndexWriter::documentsCreate(indexPath, index_builder);
     textIndexWriter::write(indexPath, index_builder);
+    book.Clear();
   } else if (fts.got_subcommand("search")) {
     SearchIndex book_search;
     book_search.search(query, indexPath);
