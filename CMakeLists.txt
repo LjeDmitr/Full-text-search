@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.22.1)
 set(CMAKE_CXX_COMPILER g++)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 project(
-  index
+  fts
   VERSION 1.0
   LANGUAGES CXX
 )
