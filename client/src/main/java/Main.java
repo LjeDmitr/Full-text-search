@@ -1,5 +1,3 @@
-package com.fts;
-
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 

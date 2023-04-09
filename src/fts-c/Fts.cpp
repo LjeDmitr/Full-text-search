@@ -67,7 +67,6 @@ JNIEXPORT void JNICALL Java_Fts_searcher(
     cout << "Error jobj = NULL" << endl;
     return;
   }
-
   string query = jstring2string(jenv, jquery);
   string index_path = jstring2string(jenv, indexPath);
 

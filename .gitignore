@@ -4,3 +4,4 @@ client/fts-client.iml
 client/index
 client/target
 *.log
+.vscode
