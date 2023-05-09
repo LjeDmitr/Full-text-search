@@ -61,6 +61,22 @@ class IndexAccessor {
 
 bool demo_exists(const fs::path& p, fs::file_status);
 
+class BinaryIndexAccessor {
+private:
+    const char *data_;
+    Header header_;
+
+public:
+    BinaryIndexAccessor(const char *data, Header &header);
+    std::uint32_t retrieve(const std::string &word) const;
+    std::map<std::size_t, std::vector<std::size_t>> get_term_infos(std::uint32_t entry_offset) const;
+    std::string get_document_by_id(std::size_t identifier) const ;
+    std::size_t get_document_count() const;
+    std::vector<std::size_t> get_documents_by_term(const std::string &term) const;
+    std::vector<std::size_t> get_term_positions_in_document(
+        const std::string &term, std::size_t identifier) const;
+};
+
 class BinaryIndexWriter {
 public:
     static void write(const std::filesystem::path &path, indexBuilder &index);

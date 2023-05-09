@@ -225,6 +225,63 @@ vector<string> IndexAccessor::allDocNames(string indexPath) {
   return docNames;
 }
 
+BinaryIndexAccessor::BinaryIndexAccessor(const char* data, Header& header)
+    : data_(data), header_(header) {
+}
+
+uint32_t BinaryIndexAccessor::retrieve(const string& word) const {
+  BinaryReader reader(data_);
+  reader.move(header_.section_offset("dictionary"));
+  Dictionary dictionary(reader.current());
+  return dictionary.retrieve(word);
+}
+
+map<size_t, vector<size_t>> BinaryIndexAccessor::get_term_infos(
+    uint32_t entry_offset) const {
+  BinaryReader reader(data_);
+  reader.move(header_.section_offset("entries"));
+  Entries entries(reader.current());
+  return entries.get_term_infos(entry_offset);
+}
+
+string BinaryIndexAccessor::get_document_by_id(size_t identifier) const {
+  BinaryReader reader(data_);
+  reader.move(header_.section_offset("docs"));
+  Documents docs(reader.current());
+  return docs.get_document_by_id(identifier);
+}
+
+size_t BinaryIndexAccessor::get_document_count() const {
+  BinaryReader reader(data_);
+  reader.move(header_.section_offset("docs"));
+  Documents docs(reader.current());
+  return docs.get_document_count();
+}
+
+vector<size_t> BinaryIndexAccessor::get_documents_by_term(
+    const string& term) const {
+  const auto entry_offset = retrieve(term);
+  const auto term_infos = get_term_infos(entry_offset);
+  vector<size_t> documents;
+  for (const auto& [offset, positions] : term_infos) {
+    documents.push_back(offset);
+  }
+  return documents;
+}
+
+vector<size_t> BinaryIndexAccessor::get_term_positions_in_document(
+    const string& term,
+    size_t identifier) const {
+  const auto entry_offset = retrieve(term);
+  const auto term_infos = get_term_infos(entry_offset);
+  const auto positions = term_infos.find(identifier);
+  if (positions == term_infos.end()) {
+    cout << "failed to get a list of term positions in documents" << endl;
+    exit(-1);
+  }
+  return positions->second;
+}
+
 void BinaryIndexWriter::write(
     const filesystem::path& path,
     indexBuilder& index) {
