@@ -1,22 +1,23 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <vector>
 
 struct search_info {
   int df;
-  std::string text;
-  std::vector<std::pair<std::string, int>> tf;
+  std::vector<std::pair<size_t, double>> tf;
 };
 
 class SearchIndex {
  private:
-  std::vector<search_info> quers;
   std::vector<std::pair<std::string, double>> search_result;
+  void score(
+      BinaryIndexAccessor accessor,
+      double N,
+      std::vector<search_info> querys_info,
+      size_t doc_id);
 
  public:
   void search(std::string str, std::string path_index);
-  void score(std::string doc_id);
   std::vector<std::pair<std::string, double>> getSearchResult();
 };
-
-int countDoc();
