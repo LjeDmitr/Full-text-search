@@ -1,5 +1,6 @@
 #include <rapidcsv.h>
 #include <CLI/CLI.hpp>
+#include <binary/binary.hpp>
 #include <index/index.hpp>
 #include <iostream>
 #include <search/search.hpp>
@@ -27,7 +28,7 @@ int main(int argc, char** argv) {
 
   if (fts.got_subcommand("index")) {
     rapidcsv::Document book(csvPath);
-    vector<string> booksId = book.GetColumn<string>("bookID");
+    vector<size_t> booksId = book.GetColumn<size_t>("bookID");
     vector<string> booksName = book.GetColumn<string>("title");
 
     indexBuilder index_builder;
@@ -35,27 +36,17 @@ int main(int argc, char** argv) {
       index_builder.add_document(booksId[i], booksName[i]);
     }
 
-    textIndexWriter::documentsCreate(indexPath, index_builder);
-    textIndexWriter::write(indexPath, index_builder);
+    BinaryIndexWriter::write(indexPath, index_builder);
     book.Clear();
   } else if (fts.got_subcommand("search")) {
     SearchIndex book_search;
     book_search.search(query, indexPath);
-    vector<string> docsNames = IndexAccessor::allDocNames(indexPath);
-    for (size_t i = 0; i < docsNames.size(); i++) {
-      book_search.score(docsNames[i]);
-    }
-    cout << "id"
+    cout << "score"
          << "\t"
-         << "score"
-         << "\t"
-         << "text" << endl;
-    IndexAccessor index_access;
+         << "title" << endl;
     vector<pair<string, double>> result = book_search.getSearchResult();
     for (size_t i = 0; i < result.size(); i++) {
-      index_access.readDoc(result[i].first);
-      cout << result[i].first << "\t" << result[i].second << "\t"
-           << index_access.getDocText() << endl;
+      cout << result[i].second << "\t" << result[i].first << endl;
     }
   }
   return 0;

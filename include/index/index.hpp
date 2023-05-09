@@ -2,13 +2,14 @@
 #include <filesystem>
 #include <string>
 #include <vector>
+#include <binary/header.hpp>
 
 namespace fs = std::filesystem;
 
 struct term {
   int doc_count;
   std::string text;
-  std::vector<std::pair<std::string, std::vector<int>>> doc_id_and_pos;
+  std::vector<std::pair<std::size_t, std::vector<int>>> doc_id_and_pos;
 };
 
 class Index {
@@ -19,7 +20,7 @@ class Index {
   std::pair<std::string, std::vector<term>> getEntries();
   void setEntries(std::string key, std::vector<term> terms);
   void correct_index(
-      std::string doc_id,
+      std::size_t doc_id,
       std::string hash,
       std::string term,
       std::vector<int> pos);
@@ -27,14 +28,14 @@ class Index {
 
 class indexBuilder {
  private:
-  std::vector<std::pair<std::string, std::string>> docs;
+  std::vector<std::pair<std::size_t, std::string>> docs;
   std::vector<Index> indexes;
 
  public:
-  void add_document(std::string document_id, std::string text);
+  void add_document(std::size_t document_id, std::string text);
   void setIndexes(Index index);
   std::vector<Index> getIndexes();
-  std::vector<std::pair<std::string, std::string>> getDocs();
+  std::vector<std::pair<std::size_t, std::string>> getDocs();
   Index index(std::string entries_key, std::vector<term> entries_terms);
 };
 
@@ -59,3 +60,24 @@ class IndexAccessor {
 };
 
 bool demo_exists(const fs::path& p, fs::file_status);
+
+class BinaryIndexAccessor {
+private:
+    const char *data_;
+    Header header_;
+
+public:
+    BinaryIndexAccessor(const char *data, Header &header);
+    std::uint32_t retrieve(const std::string &word) const;
+    std::map<std::size_t, std::vector<std::size_t>> get_term_infos(std::uint32_t entry_offset) const;
+    std::string get_document_by_id(std::size_t identifier) const ;
+    std::size_t get_document_count() const;
+    std::vector<std::size_t> get_documents_by_term(const std::string &term) const;
+    std::vector<std::size_t> get_term_positions_in_document(
+        const std::string &term, std::size_t identifier) const;
+};
+
+class BinaryIndexWriter {
+public:
+    static void write(const std::filesystem::path &path, indexBuilder &index);
+};

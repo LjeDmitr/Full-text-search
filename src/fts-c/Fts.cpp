@@ -42,7 +42,7 @@ JNIEXPORT void JNICALL Java_Fts_indexer(
 
   try {
     rapidcsv::Document book(csv_path);
-    vector<string> booksId = book.GetColumn<string>("bookID");
+    vector<size_t> booksId = book.GetColumn<size_t>("bookID");
     vector<string> booksName = book.GetColumn<string>("title");
 
     indexBuilder index_builder;
@@ -50,8 +50,7 @@ JNIEXPORT void JNICALL Java_Fts_indexer(
       index_builder.add_document(booksId[i], booksName[i]);
     }
 
-    textIndexWriter::documentsCreate(index_path, index_builder);
-    textIndexWriter::write(index_path, index_builder);
+    BinaryIndexWriter::write(index_path, index_builder);
     book.Clear();
   } catch (exception const& e) {
     cerr << "Error, " << e.what() << endl;
@@ -72,21 +71,11 @@ JNIEXPORT void JNICALL Java_Fts_searcher(
 
   SearchIndex book_search;
   book_search.search(query, index_path);
-  vector<string> docsNames = IndexAccessor::allDocNames(index_path);
-  for (size_t i = 0; i < docsNames.size(); i++) {
-    book_search.score(docsNames[i]);
-  }
-
-  cout << "id"
+  cout << "score"
        << "\t"
-       << "score"
-       << "\t"
-       << "text" << endl;
-  IndexAccessor index_access;
+       << "title" << endl;
   vector<pair<string, double>> result = book_search.getSearchResult();
   for (size_t i = 0; i < result.size(); i++) {
-    index_access.readDoc(result[i].first);
-    cout << result[i].first << "\t" << result[i].second << "\t"
-         << index_access.getDocText() << endl;
+    cout << result[i].second << "\t" << result[i].first << endl;
   }
 }

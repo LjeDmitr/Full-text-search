@@ -19,4 +19,5 @@ target_link_libraries(
   PRIVATE
     picosha2
     parser
+    binaryLib
 )
