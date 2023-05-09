@@ -2,7 +2,7 @@
 #include <filesystem>
 #include <iostream>
 #include <vector>
-#include <binary/binaruTrie.hpp>
+#include <binary/binaryTrie.hpp>
 #include <unordered_map>
 #include <index/index.hpp>
 
@@ -59,3 +59,23 @@ class BinaryBuffer {
     return data_.size();
   }
 };
+
+void serialize(
+    Node* node,
+    BinaryBuffer& buffer,
+    std::unordered_map<Node*, Offsets>& node_to_offsets);
+
+BinaryBuffer write_docs_section(
+    indexBuilder& index,
+    std::unordered_map<std::size_t, uint32_t>& doc_offset);
+
+BinaryBuffer write_dictionary_section(
+    indexBuilder& index,
+    std::vector<uint32_t>& entry_offset);
+
+BinaryBuffer write_entries_section(
+    indexBuilder& index,
+    std::unordered_map<std::size_t, uint32_t>& doc_offset,
+    std::vector<uint32_t>& entry_offset);
+
+BinaryBuffer write_header_section();

@@ -1,4 +1,8 @@
 #include <picosha2.h>
+#include <binary/binary.hpp>
+#include <binary/dictionary.hpp>
+#include <binary/docs.hpp>
+#include <binary/entries.hpp>
 #include <fstream>
 #include <index/index.hpp>
 #include <parser/parser.hpp>
@@ -21,7 +25,7 @@ vector<Index> indexBuilder::getIndexes() {
   return indexes;
 }
 
-vector<pair<string, string>> indexBuilder::getDocs() {
+vector<pair<size_t, string>> indexBuilder::getDocs() {
   return docs;
 }
 
@@ -34,7 +38,7 @@ static bool hashUniquenessCheck(string hash, vector<Index> indexes) {
   return true;
 }
 
-static term createTerm(pair<string, vector<int>> ngram, string doc_id) {
+static term createTerm(pair<string, vector<int>> ngram, size_t doc_id) {
   term term_obj;
   term_obj.text = ngram.first;
   term_obj.doc_count = 1;
@@ -43,7 +47,7 @@ static term createTerm(pair<string, vector<int>> ngram, string doc_id) {
 }
 
 void Index::correct_index(
-    string doc_id,
+    size_t doc_id,
     string hash,
     string term,
     vector<int> pos) {
@@ -57,7 +61,7 @@ void Index::correct_index(
   }
 }
 
-void indexBuilder::add_document(string document_id, string text) {
+void indexBuilder::add_document(size_t document_id, string text) {
   parser parsing_string;
   parsing_string.parseStr(text);
   string hash_hex_str, prev_ngram;
@@ -108,9 +112,9 @@ void textIndexWriter::documentsCreate(string path, indexBuilder indexBuilder) {
     fs::create_directory(path_docs);
   }
   ofstream doc;
-  vector<pair<string, string>> docs = indexBuilder.getDocs();
+  vector<pair<size_t, string>> docs = indexBuilder.getDocs();
   for (size_t i = 0; i < docs.size(); i++) {
-    doc.open(path + "/docs/" + docs[i].first);
+    doc.open(path + "/docs/" + to_string(docs[i].first));
     if (doc.is_open()) {
       doc << docs[i].second;
       doc.close();
@@ -152,7 +156,7 @@ string textIndexWriter::testIndex(Index index) {
   for (size_t i = 0; i < terms.size(); ++i) {
     result_index += terms[i].text + " " + to_string(terms[i].doc_count) + " ";
     for (size_t j = 0; j < terms[i].doc_id_and_pos.size(); ++j) {
-      result_index += terms[i].doc_id_and_pos[j].first + " " +
+      result_index += to_string(terms[i].doc_id_and_pos[j].first) + " " +
           to_string(terms[i].doc_id_and_pos[j].second.size()) + " ";
       for (size_t k = 0; k < terms[i].doc_id_and_pos[j].second.size(); ++k) {
         result_index += to_string(terms[i].doc_id_and_pos[j].second[k]) + " ";
@@ -169,7 +173,7 @@ string IndexAccessor::getDocText() {
 vector<pair<string, int>> IndexAccessor::getTermDocList() {
   return term_doc_list;
 }
-void IndexAccessor::readDoc(std::string doc_id) {
+void IndexAccessor::readDoc(string doc_id) {
   ifstream document("index/docs/" + doc_id);
   string buff;
   if (document.is_open()) {
@@ -181,7 +185,7 @@ void IndexAccessor::readDoc(std::string doc_id) {
   }
 }
 
-void IndexAccessor::genDocList(std::string term) {
+void IndexAccessor::genDocList(string term) {
   string hash_hex_str, buff;
   ifstream index;
   vector<string> entries;
@@ -219,4 +223,38 @@ vector<string> IndexAccessor::allDocNames(string indexPath) {
   }
 
   return docNames;
+}
+
+void BinaryIndexWriter::write(
+    const filesystem::path& path,
+    indexBuilder& index) {
+  auto header_buffer = write_header_section();
+  const size_t dictionary_section_offset = 12;
+  const size_t entries_section_offset = 24;
+  const size_t docs_section_offset = 33;
+  unordered_map<size_t, uint32_t> doc_offset;
+  const auto docs_buffer = write_docs_section(index, doc_offset);
+  vector<uint32_t> entry_offset;
+  const auto entries_buffer =
+      write_entries_section(index, doc_offset, entry_offset);
+  const uint32_t dictionary_offset = header_buffer.size();
+  header_buffer.write_to(
+      &dictionary_offset, sizeof(dictionary_offset), dictionary_section_offset);
+  const auto dictionary_buffer = write_dictionary_section(index, entry_offset);
+  const uint32_t entries_offset = dictionary_offset + dictionary_buffer.size();
+  header_buffer.write_to(
+      &entries_offset, sizeof(entries_offset), entries_section_offset);
+  const uint32_t docs_offset = entries_offset + entries_buffer.size();
+  header_buffer.write_to(
+      &docs_offset, sizeof(docs_offset), docs_section_offset);
+  filesystem::create_directories(path);
+  ofstream file(path / "bindex", ios::binary);
+  if (file.is_open()) {
+    header_buffer.write_to_file(file);
+    dictionary_buffer.write_to_file(file);
+    entries_buffer.write_to_file(file);
+    docs_buffer.write_to_file(file);
+  } else {
+    cout << "can't open file" << endl;
+  }
 }
