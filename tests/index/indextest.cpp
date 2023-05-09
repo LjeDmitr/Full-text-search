@@ -4,7 +4,7 @@
 using namespace std;
 
 TEST(index, normal_data) {
-  vector<string> file_name = {"199903", "200305", "200311"};
+  vector<size_t> file_name = {199903, 200305, 200311};
   vector<string> file_text = {
       "The Matrix", "The Matrix Reloaded", "The Matrix Revolutions"};
   indexBuilder index_builder;
@@ -28,7 +28,7 @@ TEST(index, normal_data) {
 }
 
 TEST(index, repeating_term_in_one_file) {
-  vector<string> file_name = {"199903", "200305", "200311"};
+  vector<size_t> file_name = {199903, 200305, 200311};
   vector<string> file_text = {
       "The Matrix", "The Matrix Reloaded Matr", "The Matrix Revolutions"};
   indexBuilder index_builder;
