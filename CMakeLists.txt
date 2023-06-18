@@ -20,6 +20,8 @@ else()
   message("clang-tidy found:\n" ${CLANG_TIDY_VERSION})
 endif()
 
+enable_testing()
+
 add_subdirectory(tests)
 add_subdirectory(external)
 add_subdirectory(src)
