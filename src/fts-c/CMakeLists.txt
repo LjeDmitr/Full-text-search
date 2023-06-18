@@ -1,4 +1,5 @@
 set(target_name fts-c)
+set(JAVA_HOME $ENV{JAVA_HOME})
 
 add_library(${target_name} SHARED
   Fts.cpp
@@ -12,8 +13,12 @@ target_include_directories(
   ${target_name}
   PUBLIC
   	${CMAKE_SOURCE_DIR}/include
-	/opt/jdk1.8.0_331/include
-	/opt/jdk1.8.0_331/include/linux
+	${JAVA_HOME}/include
+	if(WIN32)
+    	${JAVA_HOME}/include/win32
+	else()
+    	${JAVA_HOME}/include/linux
+	endif()
 )
 
 target_link_libraries(
